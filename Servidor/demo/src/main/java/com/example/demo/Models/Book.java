@@ -24,7 +24,7 @@ public class Book {
     private String autor;
     @Column(columnDefinition = "DATE", nullable = false)
     LocalDate publishDate;
-
-    
+    @Column(columnDefinition = "LONGTEXT")
+    String cover;
 
 }
