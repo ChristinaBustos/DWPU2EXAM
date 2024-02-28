@@ -116,7 +116,6 @@ export default {
       if (file) {
         this.imageToBase64(file, (base64String) => { // Cambio a función de flecha
           this.book.cover = base64String; // Accediendo a this.book dentro de la función de flecha
-          console.log(this.book.cover)
         });
       }
     },
