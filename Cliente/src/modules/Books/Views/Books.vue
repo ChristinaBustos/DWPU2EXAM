@@ -117,6 +117,45 @@ export default {
       this.currentPage = 1;
       this.fetchData();
     },
+    OpenEditModal(book) {
+      this.selectedBook = book;
+      this.$bvModal.show('modal-update');
+    },
+    async deleteBook(id) {
+      const confirmed = await Swal.fire({
+        title: "¿Estás seguro de eliminar el libro?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#008c6f',
+        cancelButtonColor: '#e11c24',
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: 'Cancelar',
+      });
+
+      if (confirmed.isConfirmed) {
+        try {
+          const response = await axios.delete(`http://localhost:8080/api-book/libro/${id}`);
+          if (response.data.error) {
+            console.error(response.data.message);
+          } else {
+            Swal.fire({
+              title: 'Eliminada',
+              text: 'El libro se eliminó correctamente',
+              icon: 'success',
+              timer: 3000
+            });
+            this.fetchData();
+          }
+        } catch (error) {
+          const { data } = error;
+          this.$swal.fire({
+            icon: "error",
+            text: data?.text ? data.text : "Error interno",
+            timer: 3000,
+          });
+        }
+      }
+    },
   },
   mounted() {
     this.fetchData();
