@@ -36,7 +36,6 @@
             <template #footer>
               <div class="icono">
                 <b-button variant="faded" @click="OpenEditModal(book)"><b-icon icon="pencil"></b-icon></b-button>
-                <b-button variant="faded" style="color: red;" @click="deleteBook(book.id)"><b-icon icon="trash"></b-icon></b-button>
               </div>
             </template>
           </b-card>
