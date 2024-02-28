@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div style="height: 1500px" class="content">
     <div>
       <b-carousel
         style="text-shadow: 0px 0px 2px #000"
-       
+        v-show="showElement"
         indicators
         img-width="500"
         img-height="500"
@@ -38,6 +38,7 @@
     </div>
 
     <div class="d-flex flex-wrap justify-content-around">
+      <TransitionGroup name="roll" tag="div" class="d-flex d-fixed">
       <b-col v-for="(book, index) in data" :key="index" class="d-flex d-fixed">
         <b-card style="height: 50%; width: auto">
           <b-card-img v-if="book.cover !=null" :src="base64ToImage(book.cover)"></b-card-img>
@@ -52,6 +53,7 @@
           >
         </b-card>
       </b-col>
+      </TransitionGroup>
     </div>
 
     <ModalSave @book-updated="fetchData" />
@@ -82,6 +84,7 @@ export default {
         autor: "",
         publishDate: null,
       },
+      showElement: true,
     };
   },
   computed: {},
@@ -209,10 +212,23 @@ export default {
         }
       }
     },
+    onScroll() {
+      const currentScrollPosition =
+        window.pageYOffset || document.documentElement.scrollTop;
+      if (Math.abs(currentScrollPosition - this.lastScrollPosition) < 60) {
+        return;
+      }
+      this.showElement = currentScrollPosition < this.lastScrollPosition;
+      this.lastScrollPosition = currentScrollPosition;
+    },
   },
   mounted() {
     this.fetchData();
     this.carruselFoto();
+    window.addEventListener("scroll", this.onScroll);
+  },
+  beforeDestroy() {
+    window.removeEventListener("scroll", this.onScroll);
   },
 };
 </script>
