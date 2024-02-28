@@ -1,21 +1,18 @@
 <template>
-  <div>
+  <div style="height: 1500px" class="content">
     <div>
       <b-carousel
         style="text-shadow: 0px 0px 2px #000"
-        indicators
-        img-width="500"
-        img-height="500"
+        v-show="showElement"
       >
         <b-carousel-slide
-          v-for="(book, index) in data" :key="index"
+           v-for="(book, index) in carru" :key="index"
           :caption="book.name"
           :img-src="base64ToImage(book.cover)"
           class="carrusel"
         ></b-carousel-slide>
       </b-carousel>
     </div>
-
     <div>
       <div class="bodybuttons">
         <b-button v-b-modal.modal-save class="btnadd">
@@ -23,24 +20,42 @@
         </b-button>
       </div>
     </div>
+    <div class="my-5 mx-5">
+      <b-row>
+        <b-col>
+          <b-button variant="info" @click="filterAutor" >Ordenar por autor</b-button>
+        </b-col>
+        <b-col>
+          <b-button variant="info" @click="filterDates">Ordernar por fecha</b-button>
+        </b-col>
+        <b-col>
+          <b-button variant="info" @click="filterImage">Mostrar si tiene imagen</b-button>
+        </b-col>
+      </b-row>
+    </div>
 
     <div class="d-flex flex-wrap justify-content-around">
+      <TransitionGroup name="roll" tag="div" class="d-flex d-fixed">
       <b-col v-for="(book, index) in data" :key="index" class="d-flex d-fixed">
         <div draggable @dragstart="startDrag($event, book)">
 
-          <b-card  style="height: 100%; width: auto">
-            <b-card-img :src="base64ToImage(book.cover)"></b-card-img>
+
+          <b-card style="height: 100%; width: auto">
+            <b-card-img v-if="book.cover !=null" :src="base64ToImage(book.cover)" style="height: 200px"></b-card-img>
             <b-card-title>{{ book.name }}</b-card-title>
             <b-card-sub-title>{{ book.autor }}</b-card-sub-title>
             <b-card-text>{{ book.publishDate }}</b-card-text>
             <template #footer>
               <div class="icono">
                 <b-button variant="faded" @click="OpenEditModal(book)"><b-icon icon="pencil"></b-icon></b-button>
+                <b-button variant="faded" style="color: red;" @click="deleteBook(book.id)"><b-icon icon="trash"></b-icon></b-button>
               </div>
             </template>
           </b-card>
         </div>
       </b-col>
+      </TransitionGroup>
+
       <b-col class="iconos">
         <br>
         <div @drop="handleEditDrop($event)" @dragover.prevent @dragenter.prevent>
@@ -74,6 +89,7 @@ export default {
   data() {
     return {
       data: null,
+      carru: null,
       selectedBook: null,
       book: {
         id: '',
@@ -81,6 +97,7 @@ export default {
         autor: "",
         publishDate: null,
       },
+      showElement: true,
     };
   },
   computed: {},
@@ -118,6 +135,46 @@ export default {
     fetchData() {
       axios
         .get("http://localhost:8080/api-book/")
+        .then((response) => {
+          this.data = response.data.data;
+        })
+        .catch((error) => {
+          console.error("Error al obtener datos de la API", error);
+        });
+    },
+    filterAutor() {
+      axios
+        .get("http://localhost:8080/api-book/orderAutorByDesc/")
+        .then((response) => {
+          this.data = response.data.data;
+        })
+        .catch((error) => {
+          console.error("Error al obtener datos de la API", error);
+        });
+    },
+    filterDates() {
+      axios
+        .get("http://localhost:8080/api-book/orderDatesByDesc/")
+        .then((response) => {
+          this.data = response.data.data;
+        })
+        .catch((error) => {
+          console.error("Error al obtener datos de la API", error);
+        });
+    },
+    carruselFoto(){
+      axios
+        .get("http://localhost:8080/api-book/photocover/")
+        .then((response) => {
+          this.carru = response.data.data;
+        })
+        .catch((error) => {
+          console.error("Error al obtener datos de la API", error);
+        });
+    },
+    filterImage() {
+      axios
+        .get("http://localhost:8080/api-book/photocover/")
         .then((response) => {
           this.data = response.data.data;
         })
@@ -178,6 +235,7 @@ export default {
       this.OpenEditModal(book);
     }
   },
+
     startDrag(evt,item){
       evt.dataTransfer.dropEffect = 'move'
       evt.dataTransfer.effectAllowed = 'move'
@@ -187,6 +245,11 @@ export default {
   },
   mounted() {
     this.fetchData();
+    this.carruselFoto();
+    window.addEventListener("scroll", this.onScroll);
+  },
+  beforeDestroy() {
+    window.removeEventListener("scroll", this.onScroll);
   },
 };
 </script>
