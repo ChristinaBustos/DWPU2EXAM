@@ -31,7 +31,7 @@ public class BookController {
     @GetMapping("/orderAutorByAsc/")
     public ResponseEntity<List<Book>> finbyAutorAsc() {
         return new ResponseEntity(
-                this.service.OrderByAutorAsc(),
+                this.service.withPhotoCover(),
                 HttpStatus.OK);
     }
 
@@ -42,10 +42,10 @@ public class BookController {
                 HttpStatus.OK);
     }
 
-    @GetMapping("/orderDatesByAsc/")
-    public ResponseEntity<List<Book>> finbyDateAsc() {
+    @GetMapping("/photocover/")
+    public ResponseEntity<List<Book>> wtihPhotocover() {
         return new ResponseEntity(
-                this.service.OrderByPublishDateAsc(),
+                this.service.withPhotoCover(),
                 HttpStatus.OK);
     }
 
