@@ -147,7 +147,7 @@ export default {
     },
     filterImage() {
       axios
-        .get("http://localhost:8080/api-book/")
+        .get("http://localhost:8080/api-book/photocover/")
         .then((response) => {
           this.data = response.data.data;
         })

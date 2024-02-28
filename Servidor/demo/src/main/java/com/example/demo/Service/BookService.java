@@ -117,9 +117,9 @@ public class BookService {
     }
 
     @Transactional(rollbackFor = {SQLException.class})
-    public CustomResponse<List<Book>> OrderByPublishDateAsc() {
+    public CustomResponse<List<Book>> withPhotoCover() {
         List<Book> libro;
-        libro = this.repository.findAllByOrderByPublishDateAsc();
+        libro = this.repository.findAllByCoverIsNotNull();
         return new CustomResponse<>(
                 libro,
                 false,
