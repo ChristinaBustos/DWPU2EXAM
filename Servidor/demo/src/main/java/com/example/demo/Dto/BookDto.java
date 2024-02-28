@@ -18,13 +18,15 @@ public class BookDto {
     private String name;
     private String autor;
     LocalDate publishDate;
+    private String cover;
 
     public Book getBook(){
         return new Book(
                 getId(),
                 getName(),
                 getAutor(),
-                getPublishDate()
+                getPublishDate(),
+                getCover()
         );
     }
 }
