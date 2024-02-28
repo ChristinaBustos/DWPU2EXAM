@@ -3,6 +3,7 @@
     <div>
       <b-carousel
         style="text-shadow: 0px 0px 2px #000"
+       
         indicators
         img-width="500"
         img-height="500"
@@ -11,6 +12,7 @@
            v-for="(book, index) in data" :key="index"
           :caption="book.name"
           :img-src="base64ToImage(book.cover)"
+          class="carrusel"
         ></b-carousel-slide>
       </b-carousel>
     </div>
@@ -139,5 +141,9 @@ export default {
   padding-top: right 20px;
   padding-right: right 50px;
   padding-bottom: right 50px;
+}
+
+.carrusel{
+  max-height: 500px;
 }
 </style>
