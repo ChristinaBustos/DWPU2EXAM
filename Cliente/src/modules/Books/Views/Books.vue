@@ -20,15 +20,19 @@
 
 
     <div class="d-flex flex-wrap justify-content-around">
-    <b-col v-for="(book, index) in data" :key="index" class="d-flex d-fixed">
-      <b-card style="height: 100%; width:auto">
-        <b-card-title>{{ book.name }}</b-card-title>
-        <b-card-sub-title>{{ book.autor }}</b-card-sub-title>
-        <b-card-text>{{ book.publishDate }}</b-card-text>
-        <b-button @click="openUpdateModal(book)" variant="primary">Actualizar</b-button>
-        <b-button @click="deleteBook(book.id)" variant="danger">Eliminar</b-button>
-      </b-card>
-    </b-col>
+      <b-col v-for="(book, index) in data" :key="index" class="d-flex d-fixed">
+        <b-card style="height: 100%; width:auto">
+          <b-card-title>{{ book.name }}</b-card-title>
+          <b-card-sub-title>{{ book.autor }}</b-card-sub-title>
+          <b-card-text>{{ book.publishDate }}</b-card-text>
+          <template #footer>
+            <div class="icono">
+              <b-button variant="faded" @click="OpenEditModal(book)"><b-icon icon="pencil"></b-icon></b-button>
+              <b-button variant="faded" style="color: red;" @click="deleteBook(book.id)"><b-icon icon="trash"></b-icon></b-button>
+            </div>
+          </template>
+        </b-card>
+      </b-col>
     </div>
 
     <ModalSave @book-updated="fetchData" />
@@ -77,6 +81,45 @@ export default {
     filterMovies() {
       this.currentPage = 1;
       this.fetchData();
+    },
+    OpenEditModal(book) {
+      this.selectedBook = book;
+      this.$bvModal.show('modal-update');
+    },
+    async deleteBook(id) {
+      const confirmed = await Swal.fire({
+        title: "¿Estás seguro de eliminar el libro?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#008c6f',
+        cancelButtonColor: '#e11c24',
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: 'Cancelar',
+      });
+
+      if (confirmed.isConfirmed) {
+        try {
+          const response = await axios.delete(`http://localhost:8080/api-book/libro/${id}`);
+          if (response.data.error) {
+            console.error(response.data.message);
+          } else {
+            Swal.fire({
+              title: 'Eliminada',
+              text: 'El libro se eliminó correctamente',
+              icon: 'success',
+              timer: 3000
+            });
+            this.fetchData();
+          }
+        } catch (error) {
+          const { data } = error;
+          this.$swal.fire({
+            icon: "error",
+            text: data?.text ? data.text : "Error interno",
+            timer: 3000,
+          });
+        }
+      }
     },
   },
   mounted() {
