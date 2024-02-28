@@ -43,7 +43,7 @@
       </b-col>
       <b-col class="iconos">
         <br>
-        <div > 
+        <div @drop="handleEditDrop($event)" @dragover.prevent @dragenter.prevent>
           <b-icon icon="pencil"></b-icon>
         </div>
         <br>
@@ -170,6 +170,14 @@ export default {
         }
       }
     },
+    handleEditDrop(event) {
+    event.preventDefault();
+    const id = event.dataTransfer.getData('itemID');
+    const book = this.data.find(book => book.id.toString() === id.toString());
+    if (book) {
+      this.OpenEditModal(book);
+    }
+  },
     startDrag(evt,item){
       evt.dataTransfer.dropEffect = 'move'
       evt.dataTransfer.effectAllowed = 'move'
