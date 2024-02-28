@@ -26,19 +26,21 @@
 
     <div class="d-flex flex-wrap justify-content-around">
       <b-col v-for="(book, index) in data" :key="index" class="d-flex d-fixed">
+        <div draggable @dragstart="startDrag($event, book)">
 
-        <b-card style="height: 100%; width: auto">
-          <b-card-img :src="base64ToImage(book.cover)"></b-card-img>
-          <b-card-title>{{ book.name }}</b-card-title>
-          <b-card-sub-title>{{ book.autor }}</b-card-sub-title>
-          <b-card-text>{{ book.publishDate }}</b-card-text>
-          <template #footer>
-            <div class="icono">
-              <b-button variant="faded" @click="OpenEditModal(book)"><b-icon icon="pencil"></b-icon></b-button>
-              <b-button variant="faded" style="color: red;" @click="deleteBook(book.id)"><b-icon icon="trash"></b-icon></b-button>
-            </div>
-          </template>
-        </b-card>
+          <b-card  style="height: 100%; width: auto">
+            <b-card-img :src="base64ToImage(book.cover)"></b-card-img>
+            <b-card-title>{{ book.name }}</b-card-title>
+            <b-card-sub-title>{{ book.autor }}</b-card-sub-title>
+            <b-card-text>{{ book.publishDate }}</b-card-text>
+            <template #footer>
+              <div class="icono">
+                <b-button variant="faded" @click="OpenEditModal(book)"><b-icon icon="pencil"></b-icon></b-button>
+                <b-button variant="faded" style="color: red;" @click="deleteBook(book.id)"><b-icon icon="trash"></b-icon></b-button>
+              </div>
+            </template>
+          </b-card>
+        </div>
       </b-col>
       <b-col class="iconos">
         <br>
@@ -88,7 +90,6 @@ export default {
       this.show = true;
     },
     base64ToImage(base64String) {
-      console.log('Valor de base64String:', base64String);
       // Extraer el tipo de la imagen desde la cadena Base64
       const type = base64String.substring(
         "data:image/".length,
@@ -133,7 +134,8 @@ export default {
       this.selectedBook = book;
       this.$bvModal.show('modal-update');
     },
-    async deleteBook(id) {
+    async deleteBook( event) {
+      const id = event.dataTransfer.getData('itemID');
       const confirmed = await Swal.fire({
         title: "¿Estás seguro de eliminar el libro?",
         icon: 'warning',
@@ -145,7 +147,8 @@ export default {
       });
 
       if (confirmed.isConfirmed) {
-        try {
+        console.log("IDddddd",id);
+          try {
           const response = await axios.delete(`http://localhost:8080/api-book/libro/${id}`);
           if (response.data.error) {
             console.error(response.data.message);
@@ -168,11 +171,11 @@ export default {
         }
       }
     },
-
     startDrag(evt,item){
       evt.dataTransfer.dropEffect = 'move'
       evt.dataTransfer.effectAllowed = 'move'
       evt.dataTransfer.setData('itemID', item.id)
+      console.log("i de la peli",item.id);
     }
   },
   mounted() {
