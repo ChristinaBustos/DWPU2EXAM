@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BookRepository extends JpaRepository<Book,Long> {
-    List<Book> findTopByAutorBetweenOrderByAutorAutorAsc();
-    List<Book> findTopByOrderByAuthorDesc();
-    List<Book> findTopByOrderByPublishDateAsc();
-    List<Book> findTopByOrderByPublishDateDesc();
+//    List<Book> findTopByAutorBetweenOrderByAutorAutorAsc();
+//    List<Book> findTopByOrderByAuthorDesc();
+//    List<Book> findTopByOrderByPublishDateAsc();
+//    List<Book> findTopByOrderByPublishDateDesc();
 
 }

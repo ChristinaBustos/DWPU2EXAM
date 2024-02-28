@@ -91,54 +91,54 @@ public class BookService {
         }
     }
 
-
-    @Transactional(rollbackFor = {SQLException.class})
-    public CustomResponse<List<Book>> OrderByAutorAsc() {
-        List<Book> libro;
-        libro = this.repository.findTopByAutorBetweenOrderByAutorAutorAsc();
-        return new CustomResponse<>(
-                libro,
-                false,
-                200,
-                "Orden Autores Ascedente"
-        );
-    }
-
-    @Transactional(rollbackFor = {SQLException.class})
-    public CustomResponse<List<Book>> OrderByAutorDesc() {
-        List<Book> libro;
-        libro = this.repository.findTopByOrderByAuthorDesc();
-        return new CustomResponse<>(
-                libro,
-                false,
-                200,
-                "Orden Autores Descedente"
-        );
-    }
-
-    @Transactional(rollbackFor = {SQLException.class})
-    public CustomResponse<List<Book>> OrderByPublishDateAsc() {
-        List<Book> libro;
-        libro = this.repository.findTopByOrderByPublishDateAsc();
-        return new CustomResponse<>(
-                libro,
-                false,
-                200,
-                "Orden fechas Ascedente"
-        );
-    }
-
-    @Transactional(rollbackFor = {SQLException.class})
-    public CustomResponse<List<Book>> OrderByPublishDateDesc() {
-        List<Book> libro;
-        libro = this.repository.findTopByOrderByPublishDateDesc();
-        return new CustomResponse<>(
-                libro,
-                false,
-                200,
-                "Orden fechas Descedente"
-        );
-    }
+//
+//    @Transactional(rollbackFor = {SQLException.class})
+//    public CustomResponse<List<Book>> OrderByAutorAsc() {
+//        List<Book> libro;
+//        libro = this.repository.findTopByAutorBetweenOrderByAutorAutorAsc();
+//        return new CustomResponse<>(
+//                libro,
+//                false,
+//                200,
+//                "Orden Autores Ascedente"
+//        );
+//    }
+//
+//    @Transactional(rollbackFor = {SQLException.class})
+//    public CustomResponse<List<Book>> OrderByAutorDesc() {
+//        List<Book> libro;
+//        libro = this.repository.findTopByOrderByAuthorDesc();
+//        return new CustomResponse<>(
+//                libro,
+//                false,
+//                200,
+//                "Orden Autores Descedente"
+//        );
+//    }
+//
+//    @Transactional(rollbackFor = {SQLException.class})
+//    public CustomResponse<List<Book>> OrderByPublishDateAsc() {
+//        List<Book> libro;
+//        libro = this.repository.findTopByOrderByPublishDateAsc();
+//        return new CustomResponse<>(
+//                libro,
+//                false,
+//                200,
+//                "Orden fechas Ascedente"
+//        );
+//    }
+//
+//    @Transactional(rollbackFor = {SQLException.class})
+//    public CustomResponse<List<Book>> OrderByPublishDateDesc() {
+//        List<Book> libro;
+//        libro = this.repository.findTopByOrderByPublishDateDesc();
+//        return new CustomResponse<>(
+//                libro,
+//                false,
+//                200,
+//                "Orden fechas Descedente"
+//        );
+//    }
 
 
 
