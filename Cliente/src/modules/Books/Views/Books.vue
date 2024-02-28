@@ -9,7 +9,7 @@
         img-height="500"
       >
         <b-carousel-slide
-           v-for="(book, index) in data" :key="index"
+           v-for="(book, index) in carru" :key="index"
           :caption="book.name"
           :img-src="base64ToImage(book.cover)"
           class="carrusel"
@@ -32,15 +32,15 @@
           <b-button variant="info" @click="filterDates">Ordernar por fecha</b-button>
         </b-col>
         <b-col>
-          <b-button variant="info">Mostrar si tiene imagen</b-button>
+          <b-button variant="info" @click="filterImage">Mostrar si tiene imagen</b-button>
         </b-col>
       </b-row>
     </div>
 
     <div class="d-flex flex-wrap justify-content-around">
       <b-col v-for="(book, index) in data" :key="index" class="d-flex d-fixed">
-        <b-card style="height: 100%; width: auto">
-          <b-card-img :src="base64ToImage(book.cover)"></b-card-img>
+        <b-card style="height: 50%; width: auto">
+          <b-card-img v-if="book.cover !=null" :src="base64ToImage(book.cover)"></b-card-img>
           <b-card-title>{{ book.name }}</b-card-title>
           <b-card-sub-title>{{ book.autor }}</b-card-sub-title>
           <b-card-text>{{ book.publishDate }}</b-card-text>
@@ -75,6 +75,7 @@ export default {
   data() {
     return {
       data: null,
+      carru: null,
       selectedBook: null,
       book: {
         name: "",
@@ -145,6 +146,16 @@ export default {
           console.error("Error al obtener datos de la API", error);
         });
     },
+    carruselFoto(){
+      axios
+        .get("http://localhost:8080/api-book/photocover/")
+        .then((response) => {
+          this.carru = response.data.data;
+        })
+        .catch((error) => {
+          console.error("Error al obtener datos de la API", error);
+        });
+    },
     filterImage() {
       axios
         .get("http://localhost:8080/api-book/photocover/")
@@ -201,6 +212,7 @@ export default {
   },
   mounted() {
     this.fetchData();
+    this.carruselFoto();
   },
 };
 </script>

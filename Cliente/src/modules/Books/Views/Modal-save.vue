@@ -103,6 +103,10 @@ export default {
       this.cover = "";
     },
     base64ToImage(base64String) {
+      if (!base64String) {
+        console.error('base64String es nulo o indefinido');
+        return null; 
+      }
       // Extraer el tipo de la imagen desde la cadena Base64
       const type = base64String.substring(
         "data:image/".length,
