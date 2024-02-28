@@ -10,40 +10,22 @@
           <form id="registrarBook">
             <b-row class="lg">
               <b-col>
-                <label for="libro">Nombre del libor: *</label>
-                <b-form-input
-                  v-model="book.name"
-                  type="text"
-                  class="form-control"
-                  placeholder="Libro..."
-                  required
-                  aria-describedby="input-live-help input-live-feedback"
-                />
+                <label for="libro">Nombre del Libro: *</label>
+                <b-form-input v-model="book.name" type="text" class="form-control" placeholder="Libro..." required
+                  aria-describedby="input-live-help input-live-feedback" />
               </b-col>
               <b-col>
                 <label for="libro">Autor del libro: *</label>
-                <b-form-input
-                  v-model="book.autor"
-                  type="text"
-                  class="form-control"
-                  placeholder="Autor..."
-                  required
-                  aria-describedby="input-live-help input-live-feedback"
-                />
+                <b-form-input v-model="book.autor" type="text" class="form-control" placeholder="Autor..." required
+                  aria-describedby="input-live-help input-live-feedback" />
               </b-col>
             </b-row>
 
             <b-row>
               <b-col cols="6">
                 <label for="libro">Fecha de publicación: *</label>
-                <b-form-input
-                  v-model="book.publishDate"
-                  type="date"
-                  class="form-control"
-                  placeholder="2024..."
-                  required
-                  aria-describedby="input-live-help input-live-feedback"
-                />
+                <b-form-input v-model="book.publishDate" type="date" class="form-control" placeholder="2024..." required
+                  aria-describedby="input-live-help input-live-feedback" />
               </b-col>
               <b-col cols="6">
                 <label for="libro">Foto Portada: *</label>
@@ -64,12 +46,7 @@
           <button class="btn m-1 cancel" @click="onClose" id="savemovie">
             Cancelar
           </button>
-          <button
-            class="btn m-1 success"
-            @click="saveBook"
-            id="savebook"
-            type="submit"
-          >
+          <button class="btn m-1 success" @click="saveBook" id="savebook" type="submit">
             Registrar
           </button>
         </footer>
@@ -100,14 +77,20 @@ export default {
       this.book.name = "";
       this.book.autor = "";
       this.book.publishDate = null;
-      this.cover = "";
+      this.book.cover = "";
     },
     base64ToImage(base64String) {
+      if (!base64String) {
+        console.error('base64String es nulo o indefinido');
+        return null; 
+      }
+
       // Extraer el tipo de la imagen desde la cadena Base64
       const type = base64String.substring(
         "data:image/".length,
         base64String.indexOf(";base64")
       );
+
 
       // Crear un blob desde la cadena Base64
       const byteCharacters = atob(base64String.split(",")[1]);
@@ -129,14 +112,15 @@ export default {
       // Retornar la URL de la imagen
       return url;
     },
-   handleFileInputChange(event) {
-  const file = event.target.files[0];
-  if (file) {
-    this.imageToBase64(file, (base64String) => { // Cambio a función de flecha
-        this.book.cover = base64String; // Accediendo a this.book dentro de la función de flecha
-        console.log(this.book.cover)
-    });
-  }},
+    handleFileInputChange(event) {
+      const file = event.target.files[0];
+      if (file) {
+        this.imageToBase64(file, (base64String) => { // Cambio a función de flecha
+          this.book.cover = base64String; // Accediendo a this.book dentro de la función de flecha
+          console.log(this.book.cover)
+        });
+      }
+    },
     imageToBase64(file, callback) {
       const reader = new FileReader();
 

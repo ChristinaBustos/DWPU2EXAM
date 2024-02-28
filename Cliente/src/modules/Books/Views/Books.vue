@@ -3,13 +3,12 @@
     <div>
       <b-carousel
         style="text-shadow: 0px 0px 2px #000"
-       
         indicators
         img-width="500"
         img-height="500"
       >
         <b-carousel-slide
-           v-for="(book, index) in data" :key="index"
+          v-for="(book, index) in data" :key="index"
           :caption="book.name"
           :img-src="base64ToImage(book.cover)"
           class="carrusel"
@@ -33,12 +32,12 @@
           <b-card-title>{{ book.name }}</b-card-title>
           <b-card-sub-title>{{ book.autor }}</b-card-sub-title>
           <b-card-text>{{ book.publishDate }}</b-card-text>
-          <b-button @click="openUpdateModal(book)" variant="primary"
-            >Actualizar</b-button
-          >
-          <b-button @click="deleteBook(book.id)" variant="danger"
-            >Eliminar</b-button
-          >
+          <template #footer>
+            <div class="icono">
+              <b-button variant="faded" @click="OpenEditModal(book)"><b-icon icon="pencil"></b-icon></b-button>
+              <b-button variant="faded" style="color: red;" @click="deleteBook(book.id)"><b-icon icon="trash"></b-icon></b-button>
+            </div>
+          </template>
         </b-card>
       </b-col>
       <b-col class="iconos">
@@ -89,6 +88,7 @@ export default {
       this.show = true;
     },
     base64ToImage(base64String) {
+      console.log('Valor de base64String:', base64String);
       // Extraer el tipo de la imagen desde la cadena Base64
       const type = base64String.substring(
         "data:image/".length,
