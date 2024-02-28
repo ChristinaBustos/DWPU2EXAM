@@ -4,9 +4,6 @@
       <b-carousel
         style="text-shadow: 0px 0px 2px #000"
         v-show="showElement"
-        indicators
-        img-width="500"
-        img-height="500"
       >
         <b-carousel-slide
            v-for="(book, index) in carru" :key="index"
@@ -42,18 +39,30 @@
       <b-col v-for="(book, index) in data" :key="index" class="d-flex d-fixed">
         <b-card style="height: 50%; width: auto">
           <b-card-img v-if="book.cover !=null" :src="base64ToImage(book.cover)"></b-card-img>
+
           <b-card-title>{{ book.name }}</b-card-title>
           <b-card-sub-title>{{ book.autor }}</b-card-sub-title>
           <b-card-text>{{ book.publishDate }}</b-card-text>
-          <b-button @click="openUpdateModal(book)" variant="primary"
-            >Actualizar</b-button
-          >
-          <b-button @click="deleteBook(book.id)" variant="danger"
-            >Eliminar</b-button
-          >
+          <template #footer>
+            <div class="icono">
+              <b-button variant="faded" @click="OpenEditModal(book)"><b-icon icon="pencil"></b-icon></b-button>
+              <b-button variant="faded" style="color: red;" @click="deleteBook(book.id)"><b-icon icon="trash"></b-icon></b-button>
+            </div>
+          </template>
         </b-card>
       </b-col>
       </TransitionGroup>
+
+      <b-col class="iconos">
+        <br>
+        <div > 
+          <b-icon icon="pencil"></b-icon>
+        </div>
+        <br>
+        <div class="drop-zone" @drop="deleteBook($event)" @dragover.prevent @dragenter.prevent> 
+          <b-icon icon="trash"></b-icon>
+        </div>
+      </b-col>
     </div>
 
     <ModalSave @book-updated="fetchData" />
@@ -80,6 +89,7 @@ export default {
       carru: null,
       selectedBook: null,
       book: {
+        id: '',
         name: "",
         autor: "",
         publishDate: null,
@@ -93,6 +103,7 @@ export default {
       this.show = true;
     },
     base64ToImage(base64String) {
+      console.log('Valor de base64String:', base64String);
       // Extraer el tipo de la imagen desde la cadena Base64
       const type = base64String.substring(
         "data:image/".length,
@@ -221,6 +232,11 @@ export default {
       this.showElement = currentScrollPosition < this.lastScrollPosition;
       this.lastScrollPosition = currentScrollPosition;
     },
+    startDrag(evt,item){
+      evt.dataTransfer.dropEffect = 'move'
+      evt.dataTransfer.effectAllowed = 'move'
+      evt.dataTransfer.setData('itemID', item.id)
+    }
   },
   mounted() {
     this.fetchData();
@@ -245,11 +261,11 @@ export default {
   background-color: #089779;
 }
 
-.cardStyle {
-  padding-left: right 50px;
-  padding-top: right 20px;
-  padding-right: right 50px;
-  padding-bottom: right 50px;
+.iconos {
+  text-align: right;
+  padding-right: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 .carrusel{
