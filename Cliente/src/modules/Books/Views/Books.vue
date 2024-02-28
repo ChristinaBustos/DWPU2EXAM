@@ -16,13 +16,25 @@
         ></b-carousel-slide>
       </b-carousel>
     </div>
-
     <div>
       <div class="bodybuttons">
         <b-button v-b-modal.modal-save class="btnadd">
           <b-icon icon="plus"></b-icon> Registrar libro
         </b-button>
       </div>
+    </div>
+    <div class="my-5 mx-5">
+      <b-row>
+        <b-col>
+          <b-button variant="info" @click="filterAutor" >Ordenar por autor</b-button>
+        </b-col>
+        <b-col>
+          <b-button variant="info" @click="filterDates">Ordernar por fecha</b-button>
+        </b-col>
+        <b-col>
+          <b-button variant="info">Mostrar si tiene imagen</b-button>
+        </b-col>
+      </b-row>
     </div>
 
     <div class="d-flex flex-wrap justify-content-around">
@@ -104,6 +116,36 @@ export default {
       return url;
     },
     fetchData() {
+      axios
+        .get("http://localhost:8080/api-book/")
+        .then((response) => {
+          this.data = response.data.data;
+        })
+        .catch((error) => {
+          console.error("Error al obtener datos de la API", error);
+        });
+    },
+    filterAutor() {
+      axios
+        .get("http://localhost:8080/api-book/orderAutorByDesc/")
+        .then((response) => {
+          this.data = response.data.data;
+        })
+        .catch((error) => {
+          console.error("Error al obtener datos de la API", error);
+        });
+    },
+    filterDates() {
+      axios
+        .get("http://localhost:8080/api-book/orderDatesByDesc/")
+        .then((response) => {
+          this.data = response.data.data;
+        })
+        .catch((error) => {
+          console.error("Error al obtener datos de la API", error);
+        });
+    },
+    filterImage() {
       axios
         .get("http://localhost:8080/api-book/")
         .then((response) => {
