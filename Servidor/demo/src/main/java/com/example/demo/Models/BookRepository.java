@@ -10,5 +10,6 @@ public interface BookRepository extends JpaRepository<Book,Long> {
     List<Book> findAllByOrderByAutorDesc();
     List<Book> findAllByOrderByPublishDateAsc();
     List<Book> findAllByOrderByPublishDateDesc();
+    List<Book> findAllByCoverIsNotNull();
 
 }

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div  style="height: 2000px" class="content">
     <div>
       <b-modal hide-footer hide-header centered id="modal-save">
         <header class="text-center border-bottom">
@@ -84,7 +84,6 @@ export default {
         console.error('base64String es nulo o indefinido');
         return null; 
       }
-
       // Extraer el tipo de la imagen desde la cadena Base64
       const type = base64String.substring(
         "data:image/".length,
