@@ -27,6 +27,7 @@
 
     <div class="d-flex flex-wrap justify-content-around">
       <b-col v-for="(book, index) in data" :key="index" class="d-flex d-fixed">
+
         <b-card style="height: 100%; width: auto">
           <b-card-img :src="base64ToImage(book.cover)"></b-card-img>
           <b-card-title>{{ book.name }}</b-card-title>
@@ -39,6 +40,16 @@
             >Eliminar</b-button
           >
         </b-card>
+      </b-col>
+      <b-col class="iconos">
+        <br>
+        <div > 
+          <b-icon icon="pencil"></b-icon>
+        </div>
+        <br>
+        <div class="drop-zone" @drop="deleteBook($event)" @dragover.prevent @dragenter.prevent> 
+          <b-icon icon="trash"></b-icon>
+        </div>
       </b-col>
     </div>
 
@@ -65,6 +76,7 @@ export default {
       data: null,
       selectedBook: null,
       book: {
+        id: '',
         name: "",
         autor: "",
         publishDate: null,
@@ -156,6 +168,12 @@ export default {
         }
       }
     },
+
+    startDrag(evt,item){
+      evt.dataTransfer.dropEffect = 'move'
+      evt.dataTransfer.effectAllowed = 'move'
+      evt.dataTransfer.setData('itemID', item.id)
+    }
   },
   mounted() {
     this.fetchData();
@@ -175,11 +193,11 @@ export default {
   background-color: #089779;
 }
 
-.cardStyle {
-  padding-left: right 50px;
-  padding-top: right 20px;
-  padding-right: right 50px;
-  padding-bottom: right 50px;
+.iconos {
+  text-align: right;
+  padding-right: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 .carrusel{
