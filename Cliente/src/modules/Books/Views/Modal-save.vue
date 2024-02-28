@@ -34,8 +34,8 @@
             </b-row>
 
             <b-row>
-                <b-col>
-                <label for="pelicula">Fecha de publicación: *</label>
+              <b-col cols="6">
+                <label for="libro">Fecha de publicación: *</label>
                 <b-form-input
                   v-model="book.publishDate"
                   type="date"
@@ -45,12 +45,25 @@
                   aria-describedby="input-live-help input-live-feedback"
                 />
               </b-col>
+              <b-col cols="6">
+                <label for="libro">Foto Portada: *</label>
+                <input type="file" @change="handleFileInputChange">
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col class="my-2 y mx-2">
+                <b-card>
+                  <b-card-img :src="base64ToImage(book.cover)"></b-card-img>
+                </b-card>
+              </b-col>
             </b-row>
           </form>
         </main>
 
         <footer class="text-center mt-5">
-          <button class="btn m-1 cancel" @click="onClose" id="savemovie">Cancelar</button>
+          <button class="btn m-1 cancel" @click="onClose" id="savemovie">
+            Cancelar
+          </button>
           <button
             class="btn m-1 success"
             @click="saveBook"
@@ -66,10 +79,9 @@
 </template>
 
 <script>
-import Swal from 'sweetalert2';
-import axios from 'axios'
+import Swal from "sweetalert2";
+import axios from "axios";
 export default {
-  
   name: "ModalSave",
   data() {
     return {
@@ -77,46 +89,94 @@ export default {
         name: "",
         autor: "",
         publishDate: null,
+        cover: null,
       },
     };
   },
 
   methods: {
     onClose() {
-        this.$bvModal.hide("modal-save");
-        this.book.name = "";
-        this.book.autor = "";
-        this.book.publishDate = null;
+      this.$bvModal.hide("modal-save");
+      this.book.name = "";
+      this.book.autor = "";
+      this.book.publishDate = null;
+      this.cover = "";
     },
+    base64ToImage(base64String) {
+      // Extraer el tipo de la imagen desde la cadena Base64
+      const type = base64String.substring(
+        "data:image/".length,
+        base64String.indexOf(";base64")
+      );
 
+      // Crear un blob desde la cadena Base64
+      const byteCharacters = atob(base64String.split(",")[1]);
+      const byteArrays = [];
+      for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+        const slice = byteCharacters.slice(offset, offset + 512);
+        const byteNumbers = new Array(slice.length);
+        for (let i = 0; i < slice.length; i++) {
+          byteNumbers[i] = slice.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
+      }
+      const blob = new Blob(byteArrays, { type: type });
+
+      // Crear una URL para la imagen
+      const url = URL.createObjectURL(blob);
+
+      // Retornar la URL de la imagen
+      return url;
+    },
+   handleFileInputChange(event) {
+  const file = event.target.files[0];
+  if (file) {
+    this.imageToBase64(file, (base64String) => { // Cambio a función de flecha
+        this.book.cover = base64String; // Accediendo a this.book dentro de la función de flecha
+        console.log(this.book.cover)
+    });
+  }},
+    imageToBase64(file, callback) {
+      const reader = new FileReader();
+
+      reader.onload = function (event) {
+        callback(event.target.result);
+      };
+
+      reader.onerror = function (error) {
+        console.error("Error al leer el archivo:", error);
+      };
+
+      reader.readAsDataURL(file);
+    },
     async saveBook() {
+      Swal.fire({
+        title: "¿Estás seguro de registrar la libro?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#008c6f",
+        cancelButtonColor: "#e11c24",
+        confirmButtonText: "Confirmar",
+        cancelButtonText: "Cancelar",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            console.log(this.libro);
+            await axios.post("http://localhost:8080/api-book/", this.book);
             Swal.fire({
-                title: "¿Estás seguro de registrar la pelicula?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#008c6f',
-                cancelButtonColor: '#e11c24',
-                confirmButtonText: "Confirmar",
-                cancelButtonText: 'Cancelar',
-            }).then(async (result) => {
-                if (result.isConfirmed) {
-                    try {
-                        console.log(this.pelicula);
-                        await axios.post("http://localhost:8080/api-book/", this.book);
-                        Swal.fire({
-                            title: "¡Guardado!",
-                            text: "El libro se registró correctamente",
-                            icon: "success"
-                        });
-                        this.onClose();
-                        this.$emit('book-updated');
-                    } catch (error) {
-                        console.log("Error al guardar el libro", error);
-                    }
-
-                }
+              title: "¡Guardado!",
+              text: "El libro se registró correctamente",
+              icon: "success",
             });
-        },
+            this.onClose();
+            this.$emit("book-updated");
+          } catch (error) {
+            console.log("Error al guardar el libro", error);
+          }
+        }
+      });
+    },
   },
 };
 </script>
