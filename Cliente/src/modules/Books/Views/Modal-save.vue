@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div  style="height: 2000px" class="content">
     <div>
       <b-modal hide-footer hide-header centered id="modal-save">
         <header class="text-center border-bottom">

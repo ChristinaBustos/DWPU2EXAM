@@ -37,9 +37,8 @@
     <div class="d-flex flex-wrap justify-content-around">
       <TransitionGroup name="roll" tag="div" class="d-flex d-fixed">
       <b-col v-for="(book, index) in data" :key="index" class="d-flex d-fixed">
-        <b-card style="height: 50%; width: auto">
-          <b-card-img v-if="book.cover !=null" :src="base64ToImage(book.cover)"></b-card-img>
-
+        <b-card style="height: 100%; width: auto">
+          <b-card-img v-if="book.cover !=null" :src="base64ToImage(book.cover)" style="height: 200px"></b-card-img>
           <b-card-title>{{ book.name }}</b-card-title>
           <b-card-sub-title>{{ book.autor }}</b-card-sub-title>
           <b-card-text>{{ book.publishDate }}</b-card-text>
