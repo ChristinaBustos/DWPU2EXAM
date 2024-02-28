@@ -12,7 +12,7 @@
               <b-col>
                 <label for="libro">Nombre del libor: *</label>
                 <b-form-input
-                  v-model="book.title"
+                  v-model="book.name"
                   type="text"
                   class="form-control"
                   placeholder="Libro..."
@@ -66,12 +66,15 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2';
+import axios from 'axios'
 export default {
+  
   name: "ModalSave",
   data() {
     return {
       book: {
-        title: "",
+        name: "",
         autor: "",
         publishDate: null,
       },
@@ -81,16 +84,53 @@ export default {
   methods: {
     onClose() {
         this.$bvModal.hide("modal-save");
-        this.book.title = "";
+        this.book.name = "";
         this.book.autor = "";
         this.book.publishDate = null;
     },
 
-    saveBook() {
-      console.log(this.book);
-    },
+    async saveBook() {
+            Swal.fire({
+                title: "¿Estás seguro de registrar la pelicula?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#008c6f',
+                cancelButtonColor: '#e11c24',
+                confirmButtonText: "Confirmar",
+                cancelButtonText: 'Cancelar',
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        console.log(this.pelicula);
+                        await axios.post("http://localhost:8080/api-book/", this.book);
+                        Swal.fire({
+                            title: "¡Guardado!",
+                            text: "El libro se registró correctamente",
+                            icon: "success"
+                        });
+                        this.onClose();
+                        this.$emit('book-updated');
+                    } catch (error) {
+                        console.log("Error al guardar el libro", error);
+                    }
+
+                }
+            });
+        },
   },
 };
 </script>
 
-<style scoped></style>
+<style>
+.success {
+  font-family: Cabin;
+  background-color: #009475;
+  color: white;
+}
+
+.cancel {
+  font-family: Cabin;
+  background-color: #ffce50;
+  color: black;
+}
+</style>
