@@ -29,51 +29,29 @@ public class BookController {
 
 
     @GetMapping("/orderAutorByAsc/")
-    public ResponseEntity<CustomResponse<List<Book>>> finbyAutorAsc(BindingResult result) {
-        if (result.hasErrors()) {
-            return new ResponseEntity<>(
-                    null,
-                    HttpStatus.BAD_REQUEST
-            );
-        }
-        CustomResponse<List<Book>> bookFilter = this.service.OrderByAutorAsc();
-        return new ResponseEntity<>(bookFilter, HttpStatus.CREATED);
+    public ResponseEntity<List<Book>> finbyAutorAsc() {
+        return new ResponseEntity(
+                this.service.OrderByAutorAsc(),
+                HttpStatus.OK);
     }
 
     @GetMapping("/orderAutorByDesc/")
-    public ResponseEntity<CustomResponse<List<Book>>> finbyAutorDesc(BindingResult result) {
-        if (result.hasErrors()) {
-            return new ResponseEntity<>(
-                    null,
-                    HttpStatus.BAD_REQUEST
-            );
-        }
-        CustomResponse<List<Book>> bookFilter = this.service.OrderByAutorDesc();
-        return new ResponseEntity<>(bookFilter, HttpStatus.CREATED);
+    public ResponseEntity<List<Book>> finbyAutorDesc() {
+        return new ResponseEntity(
+                this.service.OrderByAutorDesc(),
+                HttpStatus.OK);
     }
 
     @GetMapping("/orderDatesByAsc/")
-    public ResponseEntity<CustomResponse<List<Book>>> finbyDateAsc(BindingResult result) {
-        if (result.hasErrors()) {
-            return new ResponseEntity<>(
-                    null,
-                    HttpStatus.BAD_REQUEST
-            );
-        }
-        CustomResponse<List<Book>> bookFilter = this.service.OrderByPublishDateAsc();
-        return new ResponseEntity<>(bookFilter, HttpStatus.CREATED);
+    public ResponseEntity<List<Book>> finbyDateAsc() {
+        return new ResponseEntity(
+                this.service.OrderByPublishDateAsc(),
+                HttpStatus.OK);
     }
 
     @GetMapping("/orderDatesByDesc/")
-    public ResponseEntity<CustomResponse<List<Book>>> finbyDateDesc(BindingResult result) {
-        if (result.hasErrors()) {
-            return new ResponseEntity<>(
-                    null,
-                    HttpStatus.BAD_REQUEST
-            );
-        }
-        CustomResponse<List<Book>> bookFilter = this.service.OrderByPublishDateDesc();
-        return new ResponseEntity<>(bookFilter, HttpStatus.CREATED);
+    public ResponseEntity<List<Book>> finbyDateDesc() {
+        return new ResponseEntity(this.service.OrderByPublishDateDesc(),  HttpStatus.OK);
     }
 
 
