@@ -7,7 +7,7 @@ const router = new VueRouter({
   base: import.meta.env.BASE_URL,
   routes: [
     {
-      path: '/books',
+      path: '/',
       name: 'books',
       component: () => import('../modules/Books/Views/Books.vue')
     }
